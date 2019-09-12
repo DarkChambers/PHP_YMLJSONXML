@@ -15,7 +15,7 @@ use App\Format\FormatInterface;
 use App\Format\JSON;
 use App\Format\XML;
 use App\Format\YAML;
-use App\Service\Serializer;;
+use App\Service\Serializer;
 
 // $json = new App\Format\JSON();
 // $xml = new App\Format\XML();
