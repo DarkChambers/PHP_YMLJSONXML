@@ -3,8 +3,8 @@ declare(strict_types=1);
 namespace App\Format;
 
 
-class YAML extends BaseFormat implements NameFormatInterface {
-    public function convert()
+class YAML extends BaseFormat implements NameFormatInterface, FormatInterface {
+    public function convert() :string
     {
         $result ='';
         foreach($this->data as $key=>$value){

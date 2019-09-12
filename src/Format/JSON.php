@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 namespace App\Format;
-
-class JSON extends BaseFormat implements FromStringInterface, NameFormatInterface
+//Inheritence from class an implementation of interfaces
+class JSON extends BaseFormat implements FromStringInterface, NameFormatInterface, FormatInterface
 {
     // //define a constant
     // const DATA = [
@@ -15,7 +15,7 @@ class JSON extends BaseFormat implements FromStringInterface, NameFormatInterfac
     // {
     //     return json_encode(self::DATA);
     // }
-    public function convert()
+    public function convert() :string
     {
         return json_encode($this->data);
         //return parent::convert();

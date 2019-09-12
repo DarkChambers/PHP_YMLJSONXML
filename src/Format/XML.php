@@ -2,9 +2,9 @@
 declare(strict_types=1);
 namespace App\Format;
 
-class XML extends BaseFormat implements NameFormatInterface
+class XML extends BaseFormat implements NameFormatInterface, FormatInterface
 {
-    public function convert()
+    public function convert() :string
     {
         $result ='';
         foreach($this->data as $key=>$value){
