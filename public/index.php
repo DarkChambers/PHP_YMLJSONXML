@@ -7,6 +7,9 @@ require __DIR__ . '/../vendor/autoload.php';
 // use App\Format as F;
 // use App\Format as F;
 // use App\Format\{JSON,XML,YAML}
+
+use App\Container;
+use App\Controller\IndexController;
 use App\Format;
 use App\Format\BaseFormat;
 use App\Format\FromStringInterface;
@@ -63,10 +66,10 @@ function findByName(string $name, array $formats): ?BaseFormat
 }
 
 
-$data = [
-    "name" => "john",
-    "surname" => "doe"
-];
+// $data = [
+//     "name" => "john",
+//     "surname" => "doe"
+// ];
 //we can pass an empty argument
 $json = new JSON();
 $xml = new XML();
@@ -120,7 +123,35 @@ $formats = [$json, $xml, $yml];
 //     var_dump($parameter->getDefaultValue());
 // }
 
-$serializer = new Serializer(new JSON());
-var_dump($data);
-var_dump($serializer);
-var_dump($serializer->serialize($data));
+// $serializer = new Serializer(new XML());
+// $controller = new IndexController($serializer);
+
+// var_dump($data);
+// var_dump($serializer);
+// var_dump($serializer->serialize($data));
+
+$container = new Container();
+
+$container->addServices('format.json', function () use ($container) {
+    return new JSON();
+});
+
+$container->addServices('format.xml', function () use ($container) {
+    return new XML();
+});
+$container->addServices('format', function () use ($container) {
+    return $container->getService('format.json');
+});
+
+$container->addServices('serializer', function () use ($container) {
+    return new Serializer($container->getService('format'));
+});
+
+$container->addServices('controller.index', function () use ($container) {
+    return new IndexController($container->getService('serializer'));
+});
+
+
+$controller = $container->getService('controller.index')->index();
+var_dump($controller);
+
