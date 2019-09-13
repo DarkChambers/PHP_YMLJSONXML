@@ -3,22 +3,19 @@
 declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
-//see composer .json
-// use App\Format as F;
-// use App\Format as F;
-// use App\Format\{JSON,XML,YAML}
 
-use App\Container;
-use App\Controller\IndexController;
-use App\Format;
-use App\Format\BaseFormat;
-use App\Format\FromStringInterface;
-use App\Format\NameFormatInterface;
-use App\Format\FormatInterface;
-use App\Format\JSON;
-use App\Format\XML;
-use App\Format\YAML;
-use App\Service\Serializer;
+// use App\Container;
+// use App\Controller\IndexController;
+// use App\Format;
+// use App\Format\BaseFormat;
+// use App\Format\FromStringInterface;
+// use App\Format\NameFormatInterface;
+// use App\Format\FormatInterface;
+// use App\Format\JSON;
+// use App\Format\XML;
+// use App\Format\YAML;
+use App\Kernel;
+// use App\Service\Serializer;
 
 
 // $json = new App\Format\JSON();
@@ -29,42 +26,42 @@ use App\Service\Serializer;
 // $xml = new F\XML();
 // $yml = new F\YAML();
 
-print("types arguments and return types<br/>");
-//accept argument type instanceof BaseFormat
-function convertData(BaseFormat $format)
-{
-    return $format->convert();
-}
+// print("types arguments and return types<br/>");
+// //accept argument type instanceof BaseFormat
+// function convertData(BaseFormat $format)
+// {
+//     return $format->convert();
+// }
 
-function getFormatName(NameFormatInterface $format): string
-{
-    return $format->getName();
-}
-//possible nullable return
-function getFormatByName(array $formats, string $name): ?BaseFormat
-{
+// function getFormatName(NameFormatInterface $format): string
+// {
+//     return $format->getName();
+// }
+// //possible nullable return
+// function getFormatByName(array $formats, string $name): ?BaseFormat
+// {
 
-    foreach ($formats as $format) {
-        if ($format instanceof NameFormatInterface && $format->getName() === $name) {
-            return $format;
-        }
-    }
-    return null;
-}
+//     foreach ($formats as $format) {
+//         if ($format instanceof NameFormatInterface && $format->getName() === $name) {
+//             return $format;
+//         }
+//     }
+//     return null;
+// }
 
 
-function findByName(string $name, array $formats): ?BaseFormat
-{
-    //anomyme function
-    //add use($name) to be able to use the variabble out of scope
-    $found = array_filter($formats, function ($format) use ($name) {
-        return $format->getName() === $name;
-    });
-    if (count($found)) {
-        return reset($found);
-    }
-    return null;
-}
+// function findByName(string $name, array $formats): ?BaseFormat
+// {
+//     //anomyme function
+//     //add use($name) to be able to use the variabble out of scope
+//     $found = array_filter($formats, function ($format) use ($name) {
+//         return $format->getName() === $name;
+//     });
+//     if (count($found)) {
+//         return reset($found);
+//     }
+//     return null;
+// }
 
 
 // $data = [
@@ -72,14 +69,14 @@ function findByName(string $name, array $formats): ?BaseFormat
 //     "surname" => "doe"
 // ];
 //we can pass an empty argument
-$json = new JSON();
-$xml = new XML();
-$yml = new YAML();
+// $json = new JSON();
+// $xml = new XML();
+// $yml = new YAML();
 // var_dump(convertData($json));
 // print("<br/>");
 // var_dump(getFormatName($json));
 //$json->setData('hi hello');
-$formats = [$json, $xml, $yml];
+// $formats = [$json, $xml, $yml];
 //var_dump(findByName('XML', $formats));
 
 
@@ -131,30 +128,10 @@ $formats = [$json, $xml, $yml];
 // var_dump($serializer);
 // var_dump($serializer->serialize($data));
 
-$container = new Container();
-//add service to the controller
-$container->addServices('format.json', function () use ($container) {
-    return new JSON();
-});
 
-$container->addServices('format.xml', function () use ($container) {
-    return new XML();
-});
-$container->addServices('format', function () use ($container) {
-    return $container->getService('format.xml');
-}, FormatInterface::class);
-
-// $container->addServices('serializer', function () use ($container) {
-//     return new Serializer($container->getService('format'));
-// });
-
-// $container->addServices('controller.index', function () use ($container) {
-//     return new IndexController($container->getService('serializer'));
-// });
-
-$container->loadServices('App\\Service');
-$container->loadServices('App\\Controller');
-
+$kernel = new Kernel();
+$kernel->boot();
+$container= $kernel->getContainer();
 var_dump($container->getServices());
 
 var_dump($container->getService('App\\Controller\\IndexController')->index());
