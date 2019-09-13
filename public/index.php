@@ -20,6 +20,7 @@ use App\Format\XML;
 use App\Format\YAML;
 use App\Service\Serializer;
 
+
 // $json = new App\Format\JSON();
 // $xml = new App\Format\XML();
 // $yml = new App\Format\YAML();
@@ -131,7 +132,7 @@ $formats = [$json, $xml, $yml];
 // var_dump($serializer->serialize($data));
 
 $container = new Container();
-
+//add service to the controller
 $container->addServices('format.json', function () use ($container) {
     return new JSON();
 });
@@ -140,18 +141,22 @@ $container->addServices('format.xml', function () use ($container) {
     return new XML();
 });
 $container->addServices('format', function () use ($container) {
-    return $container->getService('format.json');
-});
+    return $container->getService('format.xml');
+}, FormatInterface::class);
 
-$container->addServices('serializer', function () use ($container) {
-    return new Serializer($container->getService('format'));
-});
+// $container->addServices('serializer', function () use ($container) {
+//     return new Serializer($container->getService('format'));
+// });
 
-$container->addServices('controller.index', function () use ($container) {
-    return new IndexController($container->getService('serializer'));
-});
+// $container->addServices('controller.index', function () use ($container) {
+//     return new IndexController($container->getService('serializer'));
+// });
 
+$container->loadServices('App\\Service');
+$container->loadServices('App\\Controller');
 
-$controller = $container->getService('controller.index')->index();
-var_dump($controller);
+var_dump($container->getServices());
+
+var_dump($container->getService('App\\Controller\\IndexController')->index());
+var_dump($container->getService('App\\Controller\\PostController')->index());
 
