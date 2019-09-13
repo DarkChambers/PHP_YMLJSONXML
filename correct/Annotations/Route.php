@@ -4,9 +4,7 @@ namespace App\Annotations;
 
 /**
  * @Annotation
- * 
  */
-class Route
-{
-
+class Route {
+    public $route;
 }

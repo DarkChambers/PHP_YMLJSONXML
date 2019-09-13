@@ -85,7 +85,7 @@ class Kernel {
     {
         $uri = $_SERVER['REQUEST_URI'];
 
-         var_dump($uri);
+        // var_dump($uri);
 
         if (isset($this->routes[$uri])) {
             $route = $this->routes[$uri];
